@@ -6,6 +6,8 @@ const io = new Server({cors: {
     allowedHeaders: ["Access-Control-Allow-Origin"]
 }});
 
+io.origins('*:*');
+
 io.on('connection', (socket) => {
     console.log('connected');
     socket.on('message', (data) => {
