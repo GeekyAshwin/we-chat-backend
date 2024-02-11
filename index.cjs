@@ -1,6 +1,6 @@
 const { Server } = require('socket.io')
 
-const io = new Server({cors: {origin: '*'}});
+const io = new Server({cors: {origin: 'https://chatwiner.netlify.app/'}});
 
 io.on('connection', (socket) => {
     console.log('connected');
