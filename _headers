@@ -3,4 +3,5 @@
   cache-control: no-cache
   cache-control: no-store
   cache-control: must-revalidate
+  Content-Type: application/json
   Access-Control-Allow-Origin: https://chatwiner.netlify.app
