@@ -5,8 +5,8 @@ export class OAuthToken extends Model {}
 
 // Create sequelize connection
 
-const sequelize = new Sequelize("defaultdb", "avnadmin", "AVNS_9EcZcYrNiStvLfLIziA", {
-  host: "mysql-38d2c1c-techmindashwin78-b51f.a.aivencloud.com",
+const sequelize = new Sequelize("sql6687437", "sql6687437", "pBEVatBtnq", {
+  host: "sql6.freesqldatabase.com",
   dialect: "mysql",
 });
 await sequelize.authenticate();
