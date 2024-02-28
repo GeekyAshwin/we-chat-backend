@@ -16,6 +16,7 @@ app.user
 app.use(cors({
   origin: 'https://chatwiner.netlify.app',
 }));
+app.use(cors({origin: '*'}));
 app.use(express.json());
 // Add headers before the routes are defined
 server.use(function (req, res, next) {
@@ -108,6 +109,10 @@ app.get('/users/:id/messages', (req, res) => {
 
 // api to register user using email and password
 app.post('/register', cors(), (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type'); // If needed
+    res.setHeader('Access-Control-Allow-Credentials', true); // If needed
   let user = User.build({
     name: req.body.name,
     email: req.body.email,
