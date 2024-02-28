@@ -1,0 +1,6 @@
+/*
+  cache-control: max-age=0
+  cache-control: no-cache
+  cache-control: no-store
+  cache-control: must-revalidate
+  Access-Control-Allow-Origin: https://chatwiner.netlify.app/signup
