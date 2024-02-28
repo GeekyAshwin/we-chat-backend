@@ -22,7 +22,12 @@ const server = new Server({
   cors: { origin: 'https://chatwiner.netlify.app' }
 });
 
-
+//test route
+app.get('/test', (req, res) => {
+  res.send({
+    test: 'test'
+  });
+});
 
 
 
