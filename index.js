@@ -76,7 +76,7 @@ app.get('/users/:id/messages', (req, res) => {
 });
 
 // api to register user using email and password
-app.post('/register', (req, res) => {
+app.post('/register', cors(), (req, res) => {
   let user = User.build({
     name: req.body.name,
     email: req.body.email,
