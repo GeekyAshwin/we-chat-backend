@@ -17,7 +17,7 @@ app.use(express.json());
 
 // create new server
 const server = new Server({
-  cors: { origin: 'http://localhost:4200' }
+  cors: { origin: 'https://chatwiner.netlify.app' }
 });
 
 
