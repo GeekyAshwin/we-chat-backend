@@ -3,11 +3,11 @@ import { User } from "../Models/User.js";
 
 // Create sequelize connection
 
-const sequelize = new Sequelize("chatapp", "root", "root", {
-  host: "localhost",
+const sequelize = new Sequelize("defaultdb", "avnadmin", "AVNS_9EcZcYrNiStvLfLIziA", {
+  host: "mysql-38d2c1c-techmindashwin78-b51f.a.aivencloud.com",
   dialect: "mysql",
 });
-sequelize.authenticate();
+await sequelize.authenticate();
 
 for (let index = 1; index < 10; index++) {
     let user = User.build({

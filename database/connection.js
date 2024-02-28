@@ -1,11 +1,11 @@
 const { Sequelize } = require("sequelize");
 
 try {
-    const sequelize = new Sequelize("chatapp", "root", "root", {
-      host: "localhost",
+    const sequelize = new Sequelize("defaultdb", "avnadmin", "AVNS_9EcZcYrNiStvLfLIziA", {
+      host: "mysql-38d2c1c-techmindashwin78-b51f.a.aivencloud.com",
       dialect: "mysql",
     });
-    sequelize.authenticate();
+    await sequelize.authenticate();
     return sequelize;
     console.log("Database connected.");
   } catch (error) {
