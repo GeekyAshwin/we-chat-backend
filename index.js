@@ -1,40 +1,206 @@
 import express, { response } from "express";
 import { OAuth2Client } from "google-auth-library";
 import { User } from "./database/Models/User.js";
+import { Message } from "./database/Models/Message.js";
+import { Server } from "socket.io";
+import cors from "cors";
+import { OAuthToken } from "./database/Models/OAuthToken.js";
+import jwt from 'jsonwebtoken';
+import { Op } from "sequelize";
+
 const app = express();
+const secretKey = 'your_secret_key';
 
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(express.json());
+
+// create new server
+const server = new Server({
+  cors: { origin: 'http://localhost:4200' }
+});
+
+
+
+
 
 // Signup route
 app.post("/auth/signup", (req, res) => {
+  console.log(1);
   verify(req.body.credential).then((data) => {
     if (data instanceof User) {
-        res.send({
-            token: req.body.credential
-        });
+      res.redirect();
     }
   }).catch((error) => {
     console.log(error);
   })
 });
 
-async function verify(token) {
-    const client = new OAuth2Client();
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: '160025112705-092rhre4c3vch7jd1bj0h3fqcs68q67q.apps.googleusercontent.com', // Specify the CLIENT_ID of the app that accesses the backend
+// api to list all the users
+app.get('/users', (req, res) => {
+  const token = req.headers.authorization;
+  getUserByToken(token).then((user_id) => {
+    console.log(user_id);
+    User.findAll({
+      where: {
+        id: {
+          [Op.not]: user_id
+        }     
+      }   
+    }).then((data) => {
+      res.send({
+        data: data
+      });
     });
-    const data = ticket.getPayload();
-    const user = User.build({
-        name: data.name,
-        email: data.email,
-        password: '',
-        picture: data.picture,
-        google_id: data.sub,
+  });
+  
+});
+
+// api to list all the message between two users
+app.get('/users/:id/messages', (req, res) => {
+  Message.findAll({
+    where: {
+      sender_id: 1,   //auth user id
+      receiver_id: req.params.id
+    }
+  }).then((data) => {
+    res.send({
+      data: data
     });
-    return user.save();
+  })
+});
+
+// api to register user using email and password
+app.post('/register', (req, res) => {
+  let user = User.build({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+  });
+  user.save();
+  if (user) {
+    res.send({
+      data: user,
+      status: 200
+    });
+  } else {
+    res.send({
+      data: user,
+      status: 422
+    });
   }
+});
+
+// api to login user using email and password
+app.post('/login', (req, res) => {
+  login(req.body.email , req.body.password).then((token) => {
+    if (token) {
+      res.send({
+        token: token,
+        status: 200,
+        message: 'login success',
+      });
+    } else {
+      res.send({
+        data: data,
+        status: 422,
+        message: 'invalid credentials',
+      });
+    }
+  })
+  
+});
+
+// login method
+async function login(email, password) {
+  let user = await User.findOne({
+    where: {
+      email: email,
+      password: password,
+    }
+  });
+  const token = jwt.sign({id: user.id}, secretKey);
+
+  const oAuthToken = OAuthToken.build({
+    user_id: user.id,
+    token: token,        
+  });
+  oAuthToken.save();
+  return oAuthToken.token;
+}
+
+server.on('connection', (socket) => {
+  socket.on('message', (data) => {
+    socket.broadcast.emit('received', {
+      data: data,
+      message: 'Message sent from server.'
+    })
+  })
+})
+
+app.post('/message', (req, res) => {
+  let userMessage = req.body.message;
+  addMessage(userMessage).then((data) => {
+    
+    res.send({ message: 'Messase sent' });
+  })
+});
+
+async function addMessage(userMessage) {
+  let data = {
+    sender_id: 1,
+    receiver_id: 1,
+    message: userMessage,
+  }
+  let message = Message.build(data);
+  if (message.save() instanceof Message) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+async function verify(token) {
+  console.log(token)
+  const client = new OAuth2Client();
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: '160025112705-092rhre4c3vch7jd1bj0h3fqcs68q67q.apps.googleusercontent.com', // Specify the CLIENT_ID of the app that accesses the backend
+  });
+  const data = ticket.getPayload();
+  const user = User.build({
+    name: data.name,
+    email: data.email,
+    password: '',
+    picture: data.picture,
+    google_id: data.sub,
+  });
+  user.save();
+  createOAuthToken(data.email, token);  
+  return user;
+}
+
+function createOAuthToken(email, token) {
+  const oAuthToken = OAuthToken.build({
+    email: email,
+    token: token,
+  });  
+  oAuthToken.save();
+}
+
+async function getUserByToken(token) {
+  const oAuthToken = await OAuthToken.findOne({
+    where: {
+      token: token
+    }
+  });
+  return oAuthToken.dataValues.user_id;
+}
+
+server.listen(3000);
 
 app.listen(4000, () => {
   console.log("app is running");
 });
+
+

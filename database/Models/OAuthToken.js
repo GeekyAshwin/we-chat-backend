@@ -1,6 +1,7 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
+import { User } from "./User.js";
 
-export class User extends Model {}
+export class OAuthToken extends Model {}
 
 // Create sequelize connection
 
@@ -10,39 +11,37 @@ const sequelize = new Sequelize("chatapp", "root", "root", {
 });
 sequelize.authenticate();
 
-User.init(
+OAuthToken.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
-      type: DataTypes.STRING,
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: User,
+            key: 'id',
+        }
     },
     email: {
-      type: DataTypes.STRING,
+        type: DataTypes.STRING,
+        allowNull: true,
     },
-    password: {
-      type: DataTypes.STRING,
-    },
-    picture: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    google_id: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
+    token: {
+        type: DataTypes.TEXT,
+    }
   },
   {
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "User", // We need to choose the model name
+    modelName: "OAuthToken", // We need to choose the model name
   }
 );
 
 // the defined model is the class itself
 console.log(sequelize.models); // true
-await User.sync();
-console.log("The table for the User model was just (re)created!");
+await OAuthToken.sync();
+console.log("The table for the OAuthToken model was just (re)created!");
