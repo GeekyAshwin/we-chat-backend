@@ -5,3 +5,4 @@
   cache-control: must-revalidate
   Content-Type: application/json
   Access-Control-Allow-Origin: https://chatwiner.netlify.app
+  Access-Control-Allow-Headers: Content-Type,
