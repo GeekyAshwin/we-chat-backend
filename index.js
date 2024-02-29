@@ -59,6 +59,13 @@ app.post("/auth/signup", (req, res) => {
   })
 });
 
+
+app.get('/test', (req,res) => {
+  res.send({
+    test: 'test'
+  });
+});
+
 // api to list all the users
 app.get('/users', (req, res) => {
   console.log('hiiii');
