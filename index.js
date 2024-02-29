@@ -6,62 +6,32 @@ import { Server } from "socket.io";
 import cors from "cors";
 import { OAuthToken } from "./database/Models/OAuthToken.js";
 import jwt from 'jsonwebtoken';
+import bodyParser from "body-parser";
 import { Op } from "sequelize";
 
 const app = express();
 const secretKey = 'your_secret_key';
 
 app.use(express.urlencoded({ extended: true }));
-app.user
 app.use(cors({
   origin: 'https://chatwiner.netlify.app',
 }));
 app.use(cors({origin: '*'}));
 app.use(express.json());
-app.options('*', function (req,res) { res.sendStatus(200); });
-app.get('*', function (req,res) { res.sendStatus(200); });
-app.post('*', function (req,res) { res.sendStatus(200); });
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
 
-
-// app.use(function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//   next();
-// });
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', 'https://chatwiner.netlify.app');
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type');
-//   next();
-// });
-
-// app.use(function (req, res, next) {
-
-//   // Website you wish to allow to connect
-//   res.setHeader('Access-Control-Allow-Origin', 'https://chatwiner.netlify.app');
-
-//   // Request methods you wish to allow
-//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-//   // Request headers you wish to allow
-//   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-//   // Set to true if you need the website to include cookies in the requests sent
-//   // to the API (e.g. in case you use sessions)
-//   res.setHeader('Access-Control-Allow-Credentials', true);
-
-//   // Pass to next layer of middleware
-//   next();
-// });
 // create new server
 const server = new Server({
-  cors: { origin: 'https://chatwiner.netlify.app' }
+  cors: { origin: '*' }
 });
 // Add headers before the routes are defined
 server.use(function (req, res, next) {
 
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'https://chatwiner.netlify.app');
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -91,6 +61,7 @@ app.post("/auth/signup", (req, res) => {
 
 // api to list all the users
 app.get('/users', (req, res) => {
+  console.log('hiiii');
   const token = req.headers.authorization;
   getUserByToken(token).then((user_id) => {
     console.log(user_id);
@@ -125,6 +96,7 @@ app.get('/users/:id/messages', (req, res) => {
 
 // api to register user using email and password
 app.post('/register', cors(), (req, res) => {
+  console.log(req.body);
   res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type'); // If needed
