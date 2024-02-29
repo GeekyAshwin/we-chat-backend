@@ -19,6 +19,9 @@ app.use(cors({
 app.use(cors({origin: '*'}));
 app.use(express.json());
 app.options('*', function (req,res) { res.sendStatus(200); });
+app.get('*', function (req,res) { res.sendStatus(200); });
+app.post('*', function (req,res) { res.sendStatus(200); });
+
 
 // app.use(function(req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "*");
