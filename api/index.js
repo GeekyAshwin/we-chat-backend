@@ -1,10 +1,10 @@
 import express, { response } from "express";
 import { OAuth2Client } from "google-auth-library";
-import { User } from "./database/Models/User.js";
-import { Message } from "./database/Models/Message.js";
+import { User } from "../database/Models/User.js";
+import { Message } from "../database/Models/Message.js";
 import { Server } from "socket.io";
 import cors from "cors";
-import { OAuthToken } from "./database/Models/OAuthToken.js";
+import { OAuthToken } from "../database/Models/OAuthToken.js";
 import jwt from 'jsonwebtoken';
 import bodyParser from "body-parser";
 import { Op } from "sequelize";
