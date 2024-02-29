@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { User } from "../Models/User.js";
+import { mysql2 } from "mysql2";
 
 // Create sequelize connection
 

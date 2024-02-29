@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { User } from "./User.js";
+import { mysql2 } from "mysql2";
 
 export class Message extends Model {}
 
