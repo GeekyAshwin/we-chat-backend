@@ -1,8 +1,9 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { User } from "../Models/User.js";
-import { mysql2 } from "mysql2";
+import mysql2 from "mysql2";
 
 // Create sequelize connection
+const {mysql2} = mysql2;
 
 const sequelize = new Sequelize("sql6687437", "sql6687437", "pBEVatBtnq", {
   host: "sql6.freesqldatabase.com",

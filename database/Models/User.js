@@ -1,5 +1,5 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
-import { mysql2 } from "mysql2";
+import mysql2  from "mysql2";
 
 export class User extends Model {}
 

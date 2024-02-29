@@ -1,5 +1,6 @@
 const { Sequelize } = require("sequelize");
-import { mysql2 } from "mysql2";
+import mysql2  from "mysql2";
+const {mysql2} = mysql2;
 
 try {
     const sequelize = new Sequelize("sql6687437", "sql6687437", "pBEVatBtnq", {
